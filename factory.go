@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	typeStr         = "otel-receiver"
+	typeStr         = "andyfilya"
 	defaultInterval = 1 * time.Minute
 )
 
@@ -23,7 +23,7 @@ func createTracerReceiver(_ context.Context, params receiver.CreateSettings, bas
 	logger := params.Logger
 	otrvrCfg := baseCfg.(*Config)
 
-	trRvr := &oteltracerReceiver{
+	trRvr := &andyfilyaReceiver{
 		logger:       logger,
 		nextConsumer: consumer,
 		config:       otrvrCfg,

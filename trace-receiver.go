@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type oteltracerReceiver struct {
+type andyfilyaReceiver struct {
 	host         component.Host
 	cancel       context.CancelFunc
 	logger       *zap.Logger
@@ -19,7 +19,7 @@ type oteltracerReceiver struct {
 // Start function represents a signal of the Collector telling the component to
 // start its processing. context used for creating a new context to support you receiver
 // component.Host can be useful during the whole lifecycle of the receiver
-func (otRvr *oteltracerReceiver) Start(ctx context.Context, host component.Host) error {
+func (otRvr *andyfilyaReceiver) Start(ctx context.Context, host component.Host) error {
 	otRvr.host = host
 	ctx = context.Background()
 	ctx, otRvr.cancel = context.WithCancel(ctx)
@@ -42,7 +42,7 @@ func (otRvr *oteltracerReceiver) Start(ctx context.Context, host component.Host)
 }
 
 // Shutdown function is cancel context
-func (otRvr *oteltracerReceiver) Shutdown(ctx context.Context) error {
+func (otRvr *andyfilyaReceiver) Shutdown(ctx context.Context) error {
 	otRvr.cancel()
 	return nil
 }
