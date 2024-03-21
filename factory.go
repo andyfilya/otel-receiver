@@ -20,7 +20,16 @@ func createDefaultConfig() component.Config {
 }
 
 func createTracerReceiver(_ context.Context, params receiver.CreateSettings, baseCfg component.Config, consumer consumer.Traces) (receiver.Traces, error) {
-	return nil, nil
+	logger := params.Logger
+	otrvrCfg := baseCfg.(*Config)
+
+	trRvr := &oteltracerReceiver{
+		logger:       logger,
+		nextConsumer: consumer,
+		config:       otrvrCfg,
+	}
+
+	return trRvr, nil
 }
 
 // NewFactory creates a new factory for otel receiver
