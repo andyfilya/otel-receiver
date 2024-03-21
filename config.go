@@ -7,7 +7,7 @@ import (
 
 type Config struct {
 	Interval       string `mapstructure:"interval"`
-	NumberOfTraces uint   `mapstructutre:"number_of_traces"`
+	NumberOfTraces uint   `mapstructure:"number_of_traces"`
 }
 
 func (cfg *Config) Validate() error {
