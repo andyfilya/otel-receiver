@@ -2,27 +2,23 @@ package otel_receiver
 
 import (
 	"fmt"
-	"time"
+	"os"
 )
 
 type Config struct {
-	Interval       string `mapstructure:"interval"`
-	NumberOfTraces uint   `mapstructure:"number_of_traces"`
+	Path string `mapstructure:"path"`
 }
 
-func (cfg *Config) Validate() error {
-	interval, err := time.ParseDuration(cfg.Interval)
+func (c *Config) Validate() error {
+	if c.Path == "" {
+		return fmt.Errorf("path is empty")
+	}
+
+	f, err := os.Open(c.Path)
 	if err != nil {
-		return fmt.Errorf("error parse time in interval, please, make it correct")
+		fmt.Errorf("can't open file")
 	}
 
-	if interval.Minutes() < 1 {
-		return fmt.Errorf("if interval set, it has to be set at least one minute")
-	}
-
-	if cfg.NumberOfTraces < 1 {
-		return fmt.Errorf("if number of traces is set, it has to be at least one trace")
-	}
-
+	f.Close()
 	return nil
 }
