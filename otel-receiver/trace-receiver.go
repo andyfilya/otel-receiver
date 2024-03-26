@@ -13,36 +13,43 @@ type andyfilyaReceiver struct {
 	cancel       context.CancelFunc
 	logger       *zap.Logger
 	nextConsumer consumer.Traces
-	config       *Config
+	cfg          *Config
 }
 
 // Start function represents a signal of the Collector telling the component to
 // start its processing. context used for creating a new context to support you receiver
 // component.Host can be useful during the whole lifecycle of the receiver
-func (otRvr *andyfilyaReceiver) Start(ctx context.Context, host component.Host) error {
-	otRvr.host = host
+func (file *andyfilyaReceiver) Start(ctx context.Context, host component.Host) error {
+	file.host = host
 	ctx = context.Background()
-	ctx, otRvr.cancel = context.WithCancel(ctx)
+	ctx, file.cancel = context.WithCancel(ctx)
 
-	interval, _ := time.ParseDuration(otRvr.config.Interval) // err is check in config
+	interval, _ := time.ParseDuration("15s")
 	go func() {
 		ticker := time.NewTicker(interval)
 		defer ticker.Stop()
-
 		for {
 			select {
 			case <-ticker.C:
-				otRvr.logger.Info("start processing traces...")
+				file.logger.Info("I should start processing traces now!")
+				traces := generateTraces(file.cfg.Path)
+				err := file.nextConsumer.ConsumeTraces(ctx, traces)
+				if err != nil {
+					file.logger.Error(err.Error())
+					return
+				}
 			case <-ctx.Done():
 				return
 			}
 		}
 	}()
+
 	return nil
 }
 
 // Shutdown function is cancel context
-func (otRvr *andyfilyaReceiver) Shutdown(ctx context.Context) error {
-	otRvr.cancel()
+func (file *andyfilyaReceiver) Shutdown(ctx context.Context) error {
+	file.cancel()
+
 	return nil
 }
